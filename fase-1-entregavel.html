@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fase 1 — Fazer a Pergunta | Análise de Mercado de Oficinas RMC</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #0060AD; --blue-dark: #004f91; --blue-light: #E6F1FB;
+      --green-bg: #EAF3DE; --green-text: #27500A; --green-border: #639922;
+      --amber-bg: #FAEEDA; --amber-text: #633806; --amber-border: #D4900A;
+      --red-bg: #FCEBEB; --red-text: #791F1F;
+      --purple-bg: #EEEDFE; --purple-text: #3C3489;
+      --gray-bg: #F5F5F5; --gray-border: #E0E0E0; --gray-text: #666;
+      --text: #1A1A1A; --text-sec: #555;
+      --radius: 8px; --radius-lg: 12px;
+      --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    }
+    body { font-family: var(--font); background: #F0F4F8; min-height: 100vh; padding: 2rem 1rem; }
+    .card { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(0,0,0,.09); width: 100%; max-width: 820px; margin: 0 auto; overflow: hidden; }
+
+    /* HEADER */
+    .header { padding: 1.5rem 1.75rem; border-bottom: 1px solid #E8E8E8; background: linear-gradient(135deg, #0060AD 0%, #004f91 100%); }
+    .header-top { display: flex; align-items: center; gap: 16px; margin-bottom: 1rem; }
+    .cisco-bars { display: flex; align-items: flex-end; gap: 3.5px; }
+    .cisco-bar { background: #fff; border-radius: 1.5px; width: 6px; opacity: .9; }
+    .cisco-wordmark { font-size: 16px; font-weight: 700; letter-spacing: 2px; color: #fff; }
+    .header-divider { width: 1px; height: 36px; background: rgba(255,255,255,.3); margin: 0 4px; }
+    .header-course { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.75); margin-bottom: 2px; }
+    .header-title { font-size: 13px; font-weight: 500; color: #fff; }
+    .project-title { font-size: 20px; font-weight: 600; color: #fff; line-height: 1.3; margin-bottom: .4rem; }
+    .project-sub { font-size: 13px; color: rgba(255,255,255,.8); line-height: 1.5; }
+    .status-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: #fff; font-weight: 500; margin-top: .75rem; }
+
+    /* TABS */
+    .tabs-wrap { padding: 1rem 1.75rem 0; border-bottom: 1px solid #E8E8E8; }
+    .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tab { padding: 8px 16px; border-radius: var(--radius) var(--radius) 0 0; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid transparent; border-bottom: none; background: transparent; color: var(--gray-text); transition: all .15s; font-family: var(--font); }
+    .tab:hover { background: var(--gray-bg); color: var(--text); }
+    .tab.active { background: #fff; border-color: #E8E8E8; color: var(--text); margin-bottom: -1px; position: relative; border-top: 3px solid var(--blue); }
+
+    /* PANELS */
+    .panel { display: none; padding: 1.5rem 1.75rem; }
+    .panel.active { display: block; }
+
+    /* COMMON */
+    .sec-title { font-size: 11px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--gray-text); margin-bottom: .7rem; margin-top: 1.5rem; }
+    .sec-title:first-child { margin-top: 0; }
+    .tbl-wrap { border: 1px solid #E8E8E8; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th { background: var(--gray-bg); padding: 9px 14px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; color: var(--gray-text); border-bottom: 1px solid #E8E8E8; }
+    td { padding: 10px 14px; border-bottom: 1px solid #F0F0F0; color: var(--text); vertical-align: top; line-height: 1.6; }
+    tr:last-child td { border-bottom: none; }
+    .bold { font-weight: 500; }
+    .dim { color: var(--text-sec); font-size: 13px; }
+    .tag { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 9px; border-radius: 99px; margin: 2px 3px 2px 0; }
+    .tag-b { background: var(--blue-light); color: #0C447C; }
+    .tag-g { background: var(--green-bg); color: var(--green-text); }
+    .tag-a { background: var(--amber-bg); color: var(--amber-text); }
+    .tip { background: var(--blue-light); border-left: 3px solid var(--blue); border-radius: 0 var(--radius) var(--radius) 0; padding: 10px 14px; font-size: 13.5px; color: #0C447C; line-height: 1.6; margin-bottom: 1rem; }
+    .warn { background: var(--amber-bg); border-left: 3px solid var(--amber-border); border-radius: 0 var(--radius) var(--radius) 0; padding: 10px 14px; font-size: 13.5px; color: var(--amber-text); line-height: 1.6; margin-bottom: 1rem; }
+    .insight { background: var(--green-bg); border-left: 3px solid var(--green-border); border-radius: 0 var(--radius) var(--radius) 0; padding: 10px 14px; font-size: 13.5px; color: var(--green-text); line-height: 1.6; margin-bottom: 1rem; }
+    .quote { background: var(--gray-bg); border: 1px solid var(--gray-border); border-radius: var(--radius-lg); padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+    .quote-text { font-size: 15px; font-style: italic; color: var(--text); line-height: 1.7; margin-bottom: .5rem; }
+    .quote-label { font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; color: var(--gray-text); }
+    .icp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+    .icp-card { background: var(--gray-bg); border: 1px solid var(--gray-border); border-radius: var(--radius-lg); padding: 12px 14px; }
+    .icp-label { font-size: 10px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; color: var(--gray-text); margin-bottom: 4px; }
+    .icp-value { font-size: 14px; font-weight: 500; color: var(--text); }
+    .prime-block { border: 1px solid #E8E8E8; border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 1rem; }
+    .prime-header { background: #1A1A2E; padding: 12px 16px; display: flex; align-items: center; gap: 10px; }
+    .prime-dot { width: 10px; height: 10px; border-radius: 50%; background: #E8B84B; flex-shrink: 0; }
+    .prime-title { font-size: 14px; font-weight: 600; color: #fff; }
+    .prime-body { padding: 14px 16px; }
+    .prime-row { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid #F0F0F0; font-size: 13.5px; }
+    .prime-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .prime-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .prime-text { color: var(--text); line-height: 1.55; }
+    .prime-text strong { font-weight: 500; }
+    .q-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-bottom: .75rem; }
+    .q-list li { font-size: 13.5px; color: var(--text); line-height: 1.55; padding-left: 20px; position: relative; }
+    .q-list li::before { content: "→"; position: absolute; left: 0; color: var(--blue); font-weight: 700; }
+    .footer { text-align: center; padding: .75rem; font-size: 11px; color: #B0B0B0; border-top: 1px solid #F0F0F0; }
+  </style>
+</head>
+<body>
+<div class="card">
+
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="cisco-bars" id="logo-bars"></div>
+        <div class="cisco-wordmark">CISCO</div>
+      </div>
+      <div class="header-divider"></div>
+      <div>
+        <div class="header-course">Fundamentos de Análise de Dados · Módulo 1</div>
+        <div class="header-title">Laboratório: Fazer a Pergunta Certa</div>
+      </div>
+    </div>
+    <div class="project-title">Análise de Mercado de Oficinas Mecânicas — RMC</div>
+    <div class="project-sub">Identificação do perfil ideal de cliente para adoção de software de gestão SGBR na Região Metropolitana de Curitiba</div>
+    <div class="status-badge">🟡 Em desenvolvimento — Fase 1 concluída</div>
+  </div>
+
+  <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="show('pergunta', this)">1 · A Pergunta</button>
+      <button class="tab" onclick="show('icp', this)">2 · Perfil do Cliente</button>
+      <button class="tab" onclick="show('prime', this)">3 · Prime Benefícios</button>
+      <button class="tab" onclick="show('dados', this)">4 · Dados Necessários</button>
+      <button class="tab" onclick="show('reflexao', this)">5 · Reflexão</button>
+    </div>
+  </div>
+
+  <!-- ══ PERGUNTA ══ -->
+  <div id="panel-pergunta" class="panel active">
+    <div class="sec-title">Pergunta Central do Projeto</div>
+    <div class="quote">
+      <div class="quote-text">"Quantas oficinas mecânicas pequenas de mecânica geral na Região Metropolitana de Curitiba operam sem sistema de gestão próprio, estão credenciadas em plataformas de gestão de frotas como a Prime Benefícios, e representam candidatos ideais para adotar um software como o SGBR?"</div>
+      <div class="quote-label">Pergunta formulada — Fase 1</div>
+    </div>
+
+    <div class="sec-title">Contexto e Justificativa</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Aspecto</th><th>Detalhamento</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Origem do projeto</td><td>Uma MEI de suporte técnico e revenda de software na RMC já possui um cliente no setor automotivo e deseja expandir sua carteira com base em dados — não em prospecção aleatória.</td></tr>
+        <tr><td class="bold">Benefício de responder a pergunta</td><td>Identificar e priorizar oficinas com o mesmo perfil do cliente atual, focando os esforços comerciais nos prospectos com maior probabilidade de conversão.</td></tr>
+        <tr><td class="bold">Tipo de análise</td><td><span class="tag tag-b">Descritivo</span> — análise da situação atual do mercado: quantas são, onde estão, como operam. Base para uma futura análise preditiva.</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sec-title">Hipótese Inicial</div>
+    <div class="quote">
+      <div class="quote-text">"A maioria das oficinas pequenas de mecânica geral na RMC não utiliza nenhum sistema de gestão, opera com papel ou Excel, e está concentrada em municípios médios da região fora da capital."</div>
+      <div class="quote-label">Hipótese a ser validada ou refutada ao final do projeto</div>
+    </div>
+    <div class="tip">💡 Ao concluir o projeto, esta hipótese será comparada com os resultados reais do análise para verificar se foi confirmada, parcialmente confirmada ou refutada.</div>
+  </div>
+
+  <!-- ══ ICP ══ -->
+  <div id="panel-icp" class="panel">
+    <div class="sec-title">Perfil do Cliente Ideal (ICP — Ideal Customer Profile)</div>
+    <div class="tip">💡 O ICP foi construído com base em um cliente real já identificado e contatado. O objetivo do projeto é encontrar mais oficinas com características semelhantes na RMC.</div>
+
+    <div class="icp-grid">
+      <div class="icp-card">
+        <div class="icp-label">Porte</div>
+        <div class="icp-value">Pequeno · 1 a 3 mecânicos</div>
+      </div>
+      <div class="icp-card">
+        <div class="icp-label">Especialidade</div>
+        <div class="icp-value">Mecânica geral</div>
+      </div>
+      <div class="icp-card">
+        <div class="icp-label">Gestão atual</div>
+        <div class="icp-value">Sem sistema · papel ou Excel</div>
+      </div>
+      <div class="icp-card">
+        <div class="icp-label">Região</div>
+        <div class="icp-value">Região Metropolitana de Curitiba</div>
+      </div>
+      <div class="icp-card">
+        <div class="icp-label">Modelo operacional</div>
+        <div class="icp-value">Subcontrata técnicos especializados por demanda</div>
+      </div>
+      <div class="icp-card">
+        <div class="icp-label">Plataforma de demanda</div>
+        <div class="icp-value">Credenciado na Prime Benefícios</div>
+      </div>
+    </div>
+
+    <div class="sec-title">Por que este perfil é um candidato ideal para o SGBR?</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Característica</th><th>Por que gera oportunidade</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Opera sem sistema</td><td>Dor clara e imediata — qualquer sistema representa uma melhora concreta no dia a dia</td></tr>
+        <tr><td class="bold">Recebe OS da Prime Benefícios</td><td>Já lida com ordens de serviço digitais externas, mas sem sistema próprio para integrá-las</td></tr>
+        <tr><td class="bold">Subcontrata técnicos</td><td>Precisa controlar custos de mão de obra terceirizada — funcionalidade que um sistema de gestão oferece</td></tr>
+        <tr><td class="bold">Porte pequeno</td><td>Decisão de compra mais rápida — geralmente o próprio dono decide, sem burocracia</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- ══ PRIME ══ -->
+  <div id="panel-prime" class="panel">
+    <div class="sec-title">O que é a Prime Benefícios e como funciona para oficinas</div>
+
+    <div class="prime-block">
+      <div class="prime-header">
+        <div class="prime-dot"></div>
+        <div class="prime-title">Prime Benefícios — Plataforma de Gestão de Frotas</div>
+      </div>
+      <div class="prime-body">
+        <div class="prime-row">
+          <div class="prime-icon">🏢</div>
+          <div class="prime-text"><strong>O que é:</strong> Sistema de mediação entre empresas com frotas de veículos e oficinas credenciadas, com foco no controle eficiente de manutenções.</div>
+        </div>
+        <div class="prime-row">
+          <div class="prime-icon">⚙️</div>
+          <div class="prime-text"><strong>Como funciona:</strong> A empresa cliente abre uma ordem de serviço (OS). A plataforma solicita 3 orçamentos de oficinas credenciadas e aprova o de menor valor. A oficina só inicia o serviço após aprovação.</div>
+        </div>
+        <div class="prime-row">
+          <div class="prime-icon">📱</div>
+          <div class="prime-text"><strong>App para oficinas:</strong> Permite visualizar lista de OS, consultar status por estado e adicionar imagens a cada ordem em tempo real.</div>
+        </div>
+        <div class="prime-row">
+          <div class="prime-icon">💰</div>
+          <div class="prime-text"><strong>Modelo financeiro:</strong> O sistema mostra dois valores — o de emissão da NF-e e o valor de pagamento ao credenciado (com desconto contratual do cliente).</div>
+        </div>
+        <div class="prime-row">
+          <div class="prime-icon">⚠️</div>
+          <div class="prime-text"><strong>Ponto de atenção:</strong> Nem todas as oficinas credenciadas recebem o mesmo volume de trabalho. O sistema é competitivo — a oficina compete por preço em cada orçamento.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-title">Por que a Prime Benefícios é relevante para este projeto</div>
+    <div class="insight">✅ Uma oficina credenciada na Prime já demonstra dois indicadores-chave: tem volume de trabalho corporativo recorrente e já utiliza tecnologia digital no processo de atendimento — mas ainda sem sistema de gestão próprio para integrar tudo isso.</div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Indicador</th><th>O que revela sobre a oficina</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Credenciamento na Prime</td><td>Volume de trabalho corporativo, familiaridade com processos digitais básicos</td></tr>
+        <tr><td class="bold">Subcontratação de técnicos</td><td>Variedade de serviços exigidos pela plataforma — eletromecânica, pintura, etc.</td></tr>
+        <tr><td class="bold">Gestão ainda manual</td><td>Gargalo operacional claro: gerenciar OS da Prime + clientes próprios + subcontratados em papel é caótico</td></tr>
+        <tr><td class="bold">Ausência de sistema próprio</td><td>Oportunidade direta de venda do SGBR com argumentação baseada em dores reais</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="warn">⚠️ Ponto identificado na pesquisa: há relatos de oficinas credenciadas que recebem pouquíssimas OS da Prime por possível favorecimento interno. Isso deve ser considerado ao qualificar o volume real de trabalho de cada prospecto.</div>
+  </div>
+
+  <!-- ══ DADOS ══ -->
+  <div id="panel-dados" class="panel">
+    <div class="sec-title">Elementos de Dados Necessários</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Elemento</th><th>Para que serve</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Quantidade de oficinas na RMC</td><td>Estimar o tamanho total do mercado potencial</td></tr>
+        <tr><td class="bold">Distribuição geográfica por município</td><td>Identificar onde concentrar a prospecção</td></tr>
+        <tr><td class="bold">Porte da oficina (nº de funcionários)</td><td>Filtrar as que coincidem com o ICP (1-3 mecânicos)</td></tr>
+        <tr><td class="bold">Tipo de serviços oferecidos</td><td>Segmentar por especialidade (mecânica geral)</td></tr>
+        <tr><td class="bold">Uso atual de software de gestão</td><td>Identificar o segmento sem sistema próprio</td></tr>
+        <tr><td class="bold">Credenciamento em plataformas de frotas</td><td>Identificar oficinas com demanda corporativa recorrente</td></tr>
+        <tr><td class="bold">Tempo de atividade da oficina</td><td>Oficinas mais estabelecidas tendem a investir mais em gestão</td></tr>
+        <tr><td class="bold">Presença digital (Google Maps, redes)</td><td>Indicador de maturidade digital do negócio</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sec-title">Fontes de Dados Identificadas</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Fonte</th><th>O que fornece</th><th>Acesso</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">IBGE</td><td>Quantidade de empresas por CNAE (código de atividade) por município</td><td><span class="tag tag-b">Aberto</span></td></tr>
+        <tr><td class="bold">Receita Federal / CNPJ</td><td>Empresas ativas por CNAE 4520-0 (oficinas mecânicas) na RMC</td><td><span class="tag tag-b">Aberto</span></td></tr>
+        <tr><td class="bold">Google Maps</td><td>Localização, avaliações, porte estimado e presença digital</td><td><span class="tag tag-b">Aberto</span></td></tr>
+        <tr><td class="bold">DETRAN-PR</td><td>Frota veicular por município — mais veículos = mais demanda para oficinas</td><td><span class="tag tag-b">Aberto</span></td></tr>
+        <tr><td class="bold">Prime Benefícios</td><td>Rede de oficinas credenciadas na plataforma de gestão de frotas</td><td><span class="tag tag-a">Restrito</span></td></tr>
+        <tr><td class="bold">Kaggle</td><td>Datasets do setor automotivo brasileiro para contexto de mercado</td><td><span class="tag tag-b">Aberto</span></td></tr>
+        <tr><td class="bold">SIMPR (Sindicato PR)</td><td>Dados gremiais do setor de oficinas no Paraná</td><td><span class="tag tag-a">A verificar</span></td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="tip">💡 A próxima fase do projeto (Obter os Dados) consistirá em acessar essas fontes, coletar os dados relevantes e começar a montar o dataset de análise.</div>
+  </div>
+
+  <!-- ══ REFLEXÃO ══ -->
+  <div id="panel-reflexao" class="panel">
+    <div class="sec-title">Perguntas de Reflexão do Laboratório</div>
+
+    <div class="tbl-wrap"><table>
+      <thead><tr><th style="width:45%">Pergunta</th><th>Resposta</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="bold">Por que é importante identificar a pergunta antes de começar o projeto?</td>
+          <td>A pergunta determina quais dados buscar, que tipo de análise aplicar e qual resultado se espera. Sem uma pergunta clara, é fácil coletar dados irrelevantes e chegar a conclusões que não servem para tomar decisões. Neste caso, se o perfil do cliente ideal não tivesse sido definido primeiro, poderíamos analisar todas as oficinas da RMC em vez de focar nas pequenas de mecânica geral sem sistema.</td>
+        </tr>
+        <tr>
+          <td class="bold">Quais fontes de dados abertos foram encontradas?</td>
+          <td>
+            <ul class="q-list">
+              <li>IBGE — dados de empresas por CNAE e município</li>
+              <li>Receita Federal — CNPJ de empresas ativas por ramo</li>
+              <li>DETRAN-PR — frota veicular por município no Paraná</li>
+              <li>Google Maps — dados de negócios com avaliações e localização</li>
+              <li>Kaggle — datasets do setor automotivo brasileiro</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <div class="sec-title">Aprendizados desta Fase</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Aprendizado</th><th>Aplicação no projeto</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">A compreensão do negócio define a qualidade da pergunta</td><td>Conhecer o cliente real permitiu formular uma pergunta muito mais precisa do que seria possível sem esse contexto</td></tr>
+        <tr><td class="bold">Um cliente real é o melhor ponto de partida para um ICP</td><td>Em vez de supor como seria o cliente ideal, usamos os dados reais de um cliente existente como referência</td></tr>
+        <tr><td class="bold">Investigar o ecossistema do cliente revela novas dimensões</td><td>Descobrir que o cliente usa Prime Benefícios adicionou uma nova variável relevante ao projeto: o credenciamento em plataformas de frotas</td></tr>
+        <tr><td class="bold">Nem todos os dados necessários são abertos</td><td>Dados sobre credenciamento na Prime Benefícios são restritos — será necessário encontrar formas alternativas de identificar essa variável</td></tr>
+      </tbody>
+    </table></div>
+
+    <div class="sec-title">Próximos Passos</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Fase</th><th>O que será feito</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td class="bold">Fase 1 · Fazer a Pergunta</td><td>Definição do problema, ICP, hipótese e fontes de dados</td><td><span class="tag tag-g">✅ Concluída</span></td></tr>
+        <tr><td class="bold">Fase 2 · Obter os Dados</td><td>Coleta de dados do IBGE, Receita Federal, DETRAN-PR e Google Maps</td><td><span class="tag tag-a">🔄 Próxima fase</span></td></tr>
+        <tr><td class="bold">Fase 3 · Investigar os Dados</td><td>Verificar completude, consistência e relevância dos dados coletados</td><td><span class="tag" style="background:#F0F0F0;color:#888">⏳ Pendente</span></td></tr>
+        <tr><td class="bold">Fase 4 · Preparar os Dados</td><td>Limpeza, padronização e transformação para análise</td><td><span class="tag" style="background:#F0F0F0;color:#888">⏳ Pendente</span></td></tr>
+        <tr><td class="bold">Fase 5 · Analisar os Dados</td><td>Análise descritiva do mercado de oficinas na RMC</td><td><span class="tag" style="background:#F0F0F0;color:#888">⏳ Pendente</span></td></tr>
+        <tr><td class="bold">Fase 6 · Apresentar os Resultados</td><td>Dashboard e relatório final com recomendações comerciais</td><td><span class="tag" style="background:#F0F0F0;color:#888">⏳ Pendente</span></td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="footer">Análise de Mercado de Oficinas Mecânicas — RMC · Fase 1 · Cisco Networking Academy</div>
+</div>
+
+<script>
+const BAR_H = [18,28,38,48,38,48,38,28,18];
+function drawBars(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = '';
+  BAR_H.forEach(h => {
+    const b = document.createElement('div');
+    b.className = 'cisco-bar';
+    b.style.height = h + 'px';
+    el.appendChild(b);
+  });
+}
+drawBars('logo-bars');
+
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
